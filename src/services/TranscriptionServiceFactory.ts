@@ -1,5 +1,4 @@
-import { AssemblyAIService } from './AssemblyAIService';
-import { OtherService } from './OtherService'; // When you add more services
+import { AssemblyAIService } from './TranscriptionService';
 
 export type ServiceType = 'AssemblyAI' | 'OtherService';
 

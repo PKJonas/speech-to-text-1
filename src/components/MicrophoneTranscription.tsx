@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { AssemblyAI } from 'assemblyai';
 import AudioRecorder from './AudioRecorder';
 import { TranscriptionService, AssemblyAIService } from '../services/TranscriptionService';
 import axios from 'axios';
@@ -13,8 +12,6 @@ const MicrophoneTranscription: React.FC<MicrophoneTranscriptionProps> = ({ apiKe
   const [selectedService, setSelectedService] = useState<string>('AssemblyAI');
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [testCases, setTestCases] = useState<TestCase[]>([]);
-  const [testResults, setTestResults] = useState<{ [key: string]: string }>({});
 
   const handleRecordingComplete = async (audioBlob: Blob) => {
     setIsTranscribing(true);

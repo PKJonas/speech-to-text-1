@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AssemblyAI } from 'assemblyai';
+import { AssemblyAI, Transcript } from 'assemblyai';
 
 interface FileTranscriptionProps {
   apiKey: string;
@@ -32,18 +32,20 @@ const FileTranscription: React.FC<FileTranscriptionProps> = ({ apiKey, onTranscr
 
     try {
       // First, upload the file
-      const uploadResponse = await client.files.upload({ file });
+      const uploadUrl: string = await client.files.upload(file);
 
       // Then, transcribe the uploaded file
-      const transcript = await client.transcripts.create({
-        audio: uploadResponse.id,
+      const transcript: Transcript = await client.transcripts.transcribe({
+        audio_url: uploadUrl,
         language_code: 'lt', // Lithuanian language code
       });
 
-      // Wait for the transcription to complete
-      const polledTranscript = await client.transcripts.wait(transcript.id);
-
-      onTranscriptionComplete(polledTranscript.text);
+      // Access the transcript text
+      if (transcript.text) {
+        onTranscriptionComplete(transcript.text);
+      } else {
+        setError('Transcription completed, but no text was generated.');
+      }
     } catch (err) {
       console.error('Transcription error:', err);
       setError('An error occurred during transcription. Please try again.');
