@@ -6,95 +6,133 @@
 ## Core Features
 
 1. Word Display
-   - Show Lithuanian words on the screen
+   - Show English words on the screen (initially)
    - Start with simple words and progress to more complex ones
    - Include a mix of nouns, verbs, and adjectives
 
 2. Speech Recognition
-   - Utilize Assembly.ai's streaming STT (Speech-to-Text) service
+   - Utilize AssemblyAI's non-streaming API for Lithuanian language support
+   - Allow users to record audio for transcription
    - Accurately recognize Lithuanian pronunciations
-   - Compare spoken words with displayed words
-   - Display real-time transcription at the bottom of the screen
-   - Provide an option to enable/disable live closed caption display
+   - Compare transcribed words with displayed words
+   - Display transcription results on the screen
+   - Provide an option to enable/disable transcription display
 
-3. Reward System
+3. Reward System (To be implemented)
    - Display a relevant, fun image when a word is correctly read
    - Play a short, engaging audio story related to the word
    - Implement a progress tracking system (e.g., stars, points)
 
-4. Text-to-Speech (TTS)
+4. Text-to-Speech (TTS) (To be implemented)
    - Narrate short stories or explanations in Lithuanian
    - Provide audio pronunciation of words for learning support
 
 5. User Interface
-   - Clean, child-friendly design
+   - Clean, child-friendly design (in progress)
    - Large, clear typography for easy reading
    - Intuitive navigation suitable for young children
 
-## Technical Requirements
+## Technical Implementation
 
 1. Frontend
    - React for UI components
    - Vite for build tooling and development server
-   - CSS for styling (consider using a UI library like MUI or Chakra UI)
+   - TypeScript for type-safe code
+   - CSS for styling (consider using a UI library like MUI or Chakra UI in the future)
 
-2. Speech Recognition
-   - Implement using Assembly.ai's streaming STT service
-   - Set up real-time audio streaming from the client to Assembly.ai's API
-   - Handle API responses and error cases
-   - Create a toggleable live closed caption display component
-   - Initially implement with API key directly in the frontend (to be refactored later for security)
+2. Backend
+   - Express.js server for handling API requests
+   - Multer for file upload handling
+   - CORS enabled for cross-origin requests
 
-3. Audio
-   - Use Web Audio API for playing sounds and stories
-   - Preload audio files for smooth playback
+3. Speech Recognition
+   - AssemblyAI SDK integrated for transcription
+   - File upload functionality implemented
+   - Transcription results handled and displayed
+   - Service selection interface implemented (currently only AssemblyAI)
 
-4. State Management
-   - Use React's built-in state management (useState, useContext) for simpler state
-   - Consider Redux or MobX for more complex state management if needed
+4. Audio Recording
+   - Web Audio API used for recording audio
+   - AudioRecorder component created for managing recording state and blob creation
 
-5. Data Storage
-   - Store word lists, audio file paths, and image URLs in JSON format
-   - Consider using IndexedDB for client-side storage of user progress
+5. State Management
+   - React's useState for component-level state management
+   - Consider using useContext or Redux for more complex state management in the future
 
-6. Deployment
-   - Host on Replit for easy development and sharing
-   - Consider additional hosting options for production (e.g., Vercel, Netlify)
+6. Testing
+   - Jest configured for running tests
+   - Integration tests set up for transcription service
+
+7. Development Workflow
+   - Concurrent running of frontend and backend servers
+   - Environment variables used for API key management
+
+## Current Project Structure
+
+- `/src`
+  - `/components`
+    - `AudioRecorder.tsx`
+    - `MicrophoneTranscription.tsx`
+    - `TestCaseRecorder.tsx`
+  - `/services`
+    - `TranscriptionService.ts`
+- `/server`
+  - `server.js`
+- `/tests`
+  - `transcription.test.js`
+  - `/test-audio` (to be added)
+- `vite.config.ts`
+- `jest.config.js`
+- `package.json`
+
+## Next Steps
+
+1. Implement the reward system
+   - Create components for displaying images and playing audio
+   - Implement logic for tracking correct readings
+
+2. Develop the game flow
+   - Create a word list and progression system
+   - Implement UI for word display and user interaction
+
+3. Enhance the user interface
+   - Improve the overall design for a child-friendly experience
+   - Implement responsive design for various device sizes
+
+4. Implement Text-to-Speech functionality
+   - Integrate a TTS service for Lithuanian language
+   - Create audio playback components
+
+5. Expand test coverage
+   - Add unit tests for React components
+   - Increase integration test scenarios
+
+6. Implement user progress tracking
+   - Set up local storage or database for storing user progress
+   - Create UI for displaying user achievements and progress
+
+7. Optimize performance
+   - Implement lazy loading for components and assets
+   - Optimize API calls and state management
+
+8. Security enhancements
+   - Move API key handling to a secure backend service
+   - Implement proper error handling and input validation
+
+9. Localization
+   - Implement a system for managing translations
+   - Create Lithuanian language version of the UI
+
+10. Deployment
+    - Set up CI/CD pipeline
+    - Deploy to a production environment (e.g., Vercel, Netlify)
 
 ## Future Enhancements
 
-1. Multi-language Support
-   - Add support for other languages, starting with English
-   - Implement language selection feature
+1. Multi-language support
+2. Customizable word lists and difficulty levels
+3. Multiplayer mode
+4. Parent/teacher dashboard for progress monitoring
+5. Integration with educational standards and curricula
 
-2. Difficulty Levels
-   - Create multiple difficulty levels for different age groups or reading abilities
-
-3. Customization
-   - Allow parents or teachers to add custom words, images, and stories
-
-4. Progress Tracking
-   - Implement user accounts for long-term progress tracking
-   - Provide detailed reports on reading performance
-
-5. Multiplayer Mode
-   - Add a competitive or cooperative mode for multiple players
-
-## Initial Development Steps
-
-1. Set up the basic React application structure (Completed)
-2. Implement the word display component (Completed)
-3. Integrate Assembly.ai's streaming STT service
-   - Set up API authentication (API key to be added directly in the frontend initially)
-   - Implement audio capture and streaming
-   - Handle real-time transcription results
-   - Create a live closed caption display component at the bottom of the screen (Completed)
-   - Implement a toggle feature for enabling/disabling the live closed caption display (Completed)
-4. Implement basic speech recognition functionality
-   - Display whatever is being spoken on the screen in real-time
-   - Ensure the live closed caption can be easily toggled on/off (Completed)
-5. Create the reward system (image display and audio playback)
-6. Develop the user interface and game flow
-7. Integrate all components and test thoroughly
-8. Deploy the initial version and gather feedback for improvements
-9. Refactor to move API key to a secure backend (Future task)
+This specification will be regularly updated as the project progresses and new features are implemented or requirements change.

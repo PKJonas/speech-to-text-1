@@ -128,3 +128,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+uploads/
+
+# Exclude uploads directory (for runtime uploads)
+uploads/
+
+# But include test audio files
+!tests/test-audio/
