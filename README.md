@@ -25,12 +25,7 @@ This project uses React for the frontend, Express for the backend, and integrate
 - `npm run dev`: Start both frontend and backend development servers concurrently
 - `npm run dev:frontend`: Start only the frontend development server
 - `npm run dev:backend`: Start only the backend server
-- `npm run dev:tool`: Start the development server for the audio recording tool
 - `npm test`: Run the test suite
-
-## Development Tools
-
-- `npm run dev:tool`: This command starts a development server for an audio recording tool. Use this to create test audio files for the game. Access the tool at `http://localhost:5173/tool.html` when running this command.
 
 ## Project Structure
 
@@ -39,3 +34,7 @@ This project uses React for the frontend, Express for the backend, and integrate
 - `/tests`: Test files and audio samples
 - `vite.config.ts`: Vite configuration
 - `jest.config.js`: Jest configuration for testing
+
+## Development
+
+The `ToolApp` component and `tool.html` file are used for development and testing of the audio recording functionality. These files should not be included in the production build. The audio recording feature will be integrated into the main application for deployment.
