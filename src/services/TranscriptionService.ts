@@ -1,7 +1,7 @@
 import { AssemblyAI } from 'assemblyai';
 
 export interface TranscriptionService {
-  transcribe(audioFile: File | null): Promise<string>;
+  transcribe(audioFile: Buffer | null, languageCode: string): Promise<string>;
 }
 
 export class AssemblyAIService implements TranscriptionService {
@@ -11,13 +11,13 @@ export class AssemblyAIService implements TranscriptionService {
     this.client = new AssemblyAI({ apiKey });
   }
 
-  async transcribe(audioFile: File | null): Promise<string> {
-    if (!audioFile) {
+  async transcribe(audioBuffer: Buffer | null, languageCode: string): Promise<string> {
+    if (!audioBuffer) {
       throw new Error('No audio file provided');
     }
 
     try {
-      const uploadUrl = await this.client.files.upload(audioFile);
+      const uploadUrl = await this.client.files.upload(audioBuffer);
 
       if (!uploadUrl) {
         throw new Error('Upload failed: No upload URL received');
@@ -25,8 +25,8 @@ export class AssemblyAIService implements TranscriptionService {
 
       const transcript = await this.client.transcripts.transcribe({
         audio_url: uploadUrl,
-        language_code: 'lt', // Lithuanian language code
-        speech_model: 'nano' // Specify the 'nano' speech model
+        language_code: languageCode,
+        speech_model: 'nano'
       });
 
       if (!transcript.text) {

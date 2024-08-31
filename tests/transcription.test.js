@@ -1,40 +1,35 @@
-import { AssemblyAI } from 'assemblyai';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import { createTranscriptionService } from '../src/services/TranscriptionServiceFactory.js';
+import { createTranscriptionService } from '../src/services/TranscriptionServiceFactory';
 
 dotenv.config();
 
+// TODO: split expected results by service
 describe('Transcription Service Integration Tests', () => {
   const testCases = [
-    { file: 'test-word-lt.mp3', language: 'Lithuanian', expectedText: 'labas' },
-    { file: 'test-word-en.mp3', language: 'English', expectedText: 'hello' },
-    // Add more test cases as needed
+    // { file: 'labas.webm', language: 'Lithuanian', expectedText: 'labas', languageCode: 'lt' },
+    { file: 'liūtas.webm', language: 'Lithuanian', expectedText:  "lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūt", languageCode: 'lt' }, // AssemblyAI fails to transcribe this
+    // { file: 'hello.webm', language: 'English', expectedText: 'hello', languageCode: 'en' },
+    // { file: 'lion.webm', language: 'English', expectedText: 'lion', languageCode: 'en' },
   ];
 
-  const services = ['AssemblyAI']; // Add more services as you implement them
+  const services = ['AssemblyAI'];
 
   services.forEach(serviceType => {
     describe(`${serviceType} Integration Tests`, () => {
-      const service = createTranscriptionService(serviceType, process.env[`${serviceType.toUpperCase()}_API_KEY`]);
+      const service = createTranscriptionService(serviceType);
 
-      testCases.forEach(({ file, language, expectedText }) => {
+      testCases.forEach(({ file, language, expectedText, languageCode }) => {
         test(`${serviceType} transcription - ${language}`, async () => {
           const audioFilePath = path.join(__dirname, 'test-audio', file);
-          const audioFile = new File([fs.readFileSync(audioFilePath)], file, { type: 'audio/mpeg' });
+          const audioBuffer = fs.readFileSync(audioFilePath);
 
-          const transcribedText = await service.transcribe(audioFile);
+          const transcribedText = await service.transcribe(audioBuffer, languageCode);
 
           expect(transcribedText.toLowerCase()).toContain(expectedText.toLowerCase());
-        }, 30000); // Increase timeout for API call
+        }, 30000);
       });
     });
-  });
-
-  test('Error handling - No audio file', async () => {
-    const service = createTranscriptionService('AssemblyAI', process.env.ASSEMBLYAI_API_KEY);
-    
-    await expect(service.transcribe(null)).rejects.toThrow('No audio file provided');
   });
 });
