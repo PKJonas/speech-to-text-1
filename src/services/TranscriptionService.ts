@@ -1,4 +1,6 @@
 import { AssemblyAI } from 'assemblyai';
+import { Buffer } from 'buffer';
+import * as musicMetadata from 'music-metadata';
 
 export interface TranscriptionService {
   transcribe(audioFile: Buffer | null, languageCode: string): Promise<string>;
@@ -6,6 +8,7 @@ export interface TranscriptionService {
 
 export class AssemblyAIService implements TranscriptionService {
   private client: AssemblyAI;
+  private readonly MIN_AUDIO_LENGTH = 2; // Minimum audio length in seconds
 
   constructor(private apiKey: string) {
     this.client = new AssemblyAI({ apiKey });
@@ -17,7 +20,8 @@ export class AssemblyAIService implements TranscriptionService {
     }
 
     try {
-      const uploadUrl = await this.client.files.upload(audioBuffer);
+      const paddedAudioBuffer = await this.padAudioIfNeeded(audioBuffer);
+      const uploadUrl = await this.client.files.upload(paddedAudioBuffer);
 
       if (!uploadUrl) {
         throw new Error('Upload failed: No upload URL received');
@@ -37,6 +41,29 @@ export class AssemblyAIService implements TranscriptionService {
     } catch (error) {
       console.error('AssemblyAI transcription error:', error);
       throw error;
+    }
+  }
+
+  private async padAudioIfNeeded(audioBuffer: Buffer): Promise<Buffer> {
+    const audioLengthSeconds = await this.getAudioLength(audioBuffer);
+
+    if (audioLengthSeconds >= this.MIN_AUDIO_LENGTH) {
+      return audioBuffer;
+    }
+
+    const paddingLengthSeconds = this.MIN_AUDIO_LENGTH - audioLengthSeconds;
+    const paddingBuffer = Buffer.alloc(Math.ceil(paddingLengthSeconds * 44100) * 2); // Assuming 44.1kHz, 16-bit audio
+
+    return Buffer.concat([audioBuffer, paddingBuffer]);
+  }
+
+  private async getAudioLength(audioBuffer: Buffer): Promise<number> {
+    try {
+      const metadata = await musicMetadata.parseBuffer(audioBuffer);
+      return metadata.format.duration || 0;
+    } catch (error) {
+      console.error('Error parsing audio metadata:', error);
+      return 0;
     }
   }
 }

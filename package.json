@@ -8,6 +8,8 @@
     "dev:backend": "npm run build && node server/server.js",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/transcription.test.js",
     "build": "tsc"
   },
   "keywords": [],
@@ -42,6 +44,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "glob": "^9.3.5",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "music-metadata": "^10.3.1"
   }
 }
