@@ -9,17 +9,20 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json({ limit: '10mb' }));
-app.use(express.raw({ type: 'audio/wav', limit: '10mb' }));
+app.use(express.raw({ type: 'audio/webm', limit: '10mb' }));
 app.use(cors());
 
 app.post('/api/transcribe', async (req, res) => {
+  console.log('Received transcription request');
   try {
     if (!req.body || req.body.length === 0) {
+      console.log('No audio data provided');
       return res.status(400).json({ error: 'No audio data provided' });
     }
 
+    console.log('Audio data received, length:', req.body.length);
     const service = createTranscriptionService('AssemblyAI');
-    const transcription = await service.transcribe(Buffer.from(req.body), 'lt');
+    const transcription = await service.transcribe(req.body, 'lt');
 
     res.json({ transcription });
   } catch (error) {

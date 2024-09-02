@@ -9,23 +9,35 @@ const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) =
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
   const startRecording = async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-    setMediaRecorder(recorder);
+    try {
+      console.log('Starting recording...');
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      console.log('Got media stream');
+      const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      setMediaRecorder(recorder);
 
-    const chunks: Blob[] = [];
-    recorder.ondataavailable = (e) => chunks.push(e.data);
-    recorder.onstop = async () => {
-      const audioBlob = new Blob(chunks, { type: 'audio/webm' });
-      await sendAudioToServer(audioBlob);
-    };
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (e) => {
+        console.log('Data available', e.data.size);
+        chunks.push(e.data);
+      };
+      recorder.onstop = async () => {
+        console.log('Recording stopped');
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        await sendAudioToServer(audioBlob);
+      };
 
-    recorder.start();
-    setIsRecording(true);
+      recorder.start();
+      setIsRecording(true);
+      console.log('Recording started');
+    } catch (error) {
+      console.error('Error starting recording:', error);
+    }
   };
 
   const stopRecording = () => {
     if (mediaRecorder) {
+      console.log('Stopping recording...');
       mediaRecorder.stop();
       setIsRecording(false);
     }
@@ -64,13 +76,15 @@ const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) =
         stack: error instanceof Error ? error.stack : undefined,
         response: (error as any).response,
       });
-      // Handle the error appropriately, e.g., show an error message to the user
     }
   };
 
   return (
     <div>
-      <button onClick={isRecording ? stopRecording : startRecording}>
+      <button onClick={() => {
+        console.log('Button clicked');
+        isRecording ? stopRecording() : startRecording();
+      }}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}
       </button>
     </div>
