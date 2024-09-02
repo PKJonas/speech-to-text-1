@@ -8,10 +8,10 @@ dotenv.config();
 // TODO: split expected results by service
 describe('Transcription Service Integration Tests', () => {
   const testCases = [
-    // { file: 'labas.webm', language: 'Lithuanian', expectedText: 'labas', languageCode: 'lt' },
+    { file: 'labas.webm', language: 'Lithuanian', expectedText: 'labas', languageCode: 'lt' },
     { file: 'liūtas.webm', language: 'Lithuanian', expectedText:  "lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūtas, lūt", languageCode: 'lt' }, // AssemblyAI fails to transcribe this
-    // { file: 'hello.webm', language: 'English', expectedText: 'hello', languageCode: 'en' },
-    // { file: 'lion.webm', language: 'English', expectedText: 'lion', languageCode: 'en' },
+    { file: 'hello.webm', language: 'English', expectedText: 'hello', languageCode: 'en' },
+    { file: 'lion.webm', language: 'English', expectedText: 'lion', languageCode: 'en' },
   ];
 
   const services = ['AssemblyAI'];

@@ -1,59 +1,78 @@
 import React, { useState } from 'react';
-import AudioRecorder from './AudioRecorder';
-import { TranscriptionService, AssemblyAIService } from '../services/TranscriptionService';
-import axios from 'axios';
 
-interface MicrophoneTranscriptionProps {
-  apiKey: string;
+interface Props {
   onTranscriptionComplete: (text: string) => void;
 }
 
-const MicrophoneTranscription: React.FC<MicrophoneTranscriptionProps> = ({ apiKey, onTranscriptionComplete }) => {
-  const [selectedService, setSelectedService] = useState<string>('AssemblyAI');
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
 
-  const handleRecordingComplete = async (audioBlob: Blob) => {
-    setIsTranscribing(true);
-    setError(null);
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+    setMediaRecorder(recorder);
 
-    const formData = new FormData();
-    formData.append('audio', audioBlob, 'recording.webm');
+    const chunks: Blob[] = [];
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+    recorder.onstop = async () => {
+      const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+      await sendAudioToServer(audioBlob);
+    };
 
-    try {
-      const response = await axios.post('/api/transcribe', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      const transcribedText = response.data.text;
-      onTranscriptionComplete(transcribedText);
-    } catch (err) {
-      console.error('Transcription error:', err);
-      setError(`An error occurred during transcription: ${err instanceof Error ? err.message : String(err)}`);
-    } finally {
-      setIsTranscribing(false);
+    recorder.start();
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+      setIsRecording(false);
     }
   };
 
-  const getTranscriptionService = (serviceName: string): TranscriptionService => {
-    switch (serviceName) {
-      case 'AssemblyAI':
-        return new AssemblyAIService(apiKey);
-      // Add cases for other services as they are implemented
-      default:
-        throw new Error(`Unsupported transcription service: ${serviceName}`);
+  const sendAudioToServer = async (audioBlob: Blob) => {
+    try {
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'audio/webm',
+        },
+        body: arrayBuffer,
+      });
+
+      const text = await response.text();
+      console.log('Server response:', text);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}, response: ${text}`);
+      }
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        console.error('Server response is not valid JSON:', text);
+        throw new Error(`Invalid JSON response from server: ${text}`);
+      }
+
+      onTranscriptionComplete(data.transcription);
+    } catch (error: unknown) {
+      console.error('Error sending audio to server:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        response: (error as any).response,
+      });
+      // Handle the error appropriately, e.g., show an error message to the user
     }
   };
 
   return (
     <div>
-      <select value={selectedService} onChange={(e) => setSelectedService(e.target.value)}>
-        <option value="AssemblyAI">AssemblyAI</option>
-        {/* Add options for other services as they are implemented */}
-      </select>
-      <AudioRecorder onRecordingComplete={handleRecordingComplete} />
-      {isTranscribing && <p>Transcribing...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {/* Add UI for test cases and results here */}
+      <button onClick={isRecording ? stopRecording : startRecording}>
+        {isRecording ? 'Stop Recording' : 'Start Recording'}
+      </button>
     </div>
   );
 };

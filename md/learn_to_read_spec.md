@@ -3,69 +3,67 @@
 ## Overview
 "Learn to Read" is an interactive game designed to help children, particularly Lithuanian speakers, improve their reading skills. The game displays words and sounds, uses speech recognition to verify the child's pronunciation, and rewards correct readings with engaging visuals and audio stories.
 
-## Core Features
+## Current Development Status
 
 1. Word Display
-   - Show English words on the screen (initially)
-   - Start with simple words and progress to more complex ones
-   - Include a mix of nouns, verbs, and adjectives
+   - Basic implementation in progress
 
 2. Speech Recognition
-   - Utilize AssemblyAI's non-streaming API for Lithuanian language support
-   - Allow users to record audio for transcription
-   - Accurately recognize Lithuanian pronunciations
-   - Compare transcribed words with displayed words
-   - Display transcription results on the screen
-   - Provide an option to enable/disable transcription display
+   - AssemblyAI's non-streaming API integrated for Lithuanian language support
+   - Audio recording and file upload functionality implemented
+   - Transcription results displayed on the screen
+   - Service selection interface implemented (currently only AssemblyAI)
 
-3. Reward System (To be implemented)
-   - Display a relevant, fun image when a word is correctly read
-   - Play a short, engaging audio story related to the word
-   - Implement a progress tracking system (e.g., stars, points)
+3. Reward System
+   - Not yet implemented
 
-4. Text-to-Speech (TTS) (To be implemented)
-   - Narrate short stories or explanations in Lithuanian
-   - Provide audio pronunciation of words for learning support
+4. Text-to-Speech (TTS)
+   - Not yet implemented
 
 5. User Interface
-   - Clean, child-friendly design (in progress)
-   - Large, clear typography for easy reading
-   - Intuitive navigation suitable for young children
+   - Basic structure implemented
+   - Needs further styling and child-friendly design
 
 ## Technical Implementation
 
 1. Frontend
-   - React for UI components
-   - Vite for build tooling and development server
-   - TypeScript for type-safe code
-   - CSS for styling (consider using a UI library like MUI or Chakra UI in the future)
+   - React and TypeScript set up with Vite
+   - Basic components created for audio recording and transcription
 
 2. Backend
-   - Express.js server for handling API requests
-   - Multer for file upload handling
+   - Express.js server implemented for handling API requests
    - CORS enabled for cross-origin requests
 
 3. Speech Recognition
-   - AssemblyAI SDK integrated for transcription
-   - File upload functionality implemented
-   - Transcription results handled and displayed
-   - Service selection interface implemented (currently only AssemblyAI)
+   - AssemblyAI SDK integrated and functional
 
 4. Audio Recording
-   - Web Audio API used for recording audio
-   - AudioRecorder component created for managing recording state and blob creation
+   - Web Audio API implemented for recording audio
+   - AudioRecorder component created
 
 5. State Management
-   - React's useState for component-level state management
-   - Consider using useContext or Redux for more complex state management in the future
+   - Using React's useState for component-level state management
 
 6. Testing
-   - Jest configured for running tests
-   - Integration tests set up for transcription service
+   - Jest configured
+   - Basic integration tests for transcription service implemented
 
 7. Development Workflow
-   - Concurrent running of frontend and backend servers
+   - Concurrent running of frontend and backend servers set up
    - Environment variables used for API key management
+
+## Next Steps
+
+1. Implement the reward system
+2. Develop the game flow
+3. Enhance the user interface
+4. Implement Text-to-Speech functionality
+5. Expand test coverage
+6. Implement user progress tracking
+7. Optimize performance
+8. Enhance security
+9. Implement localization
+10. Set up deployment pipeline
 
 ## Current Project Structure
 
@@ -84,48 +82,6 @@
 - `vite.config.ts`
 - `jest.config.js`
 - `package.json`
-
-## Next Steps
-
-1. Implement the reward system
-   - Create components for displaying images and playing audio
-   - Implement logic for tracking correct readings
-
-2. Develop the game flow
-   - Create a word list and progression system
-   - Implement UI for word display and user interaction
-
-3. Enhance the user interface
-   - Improve the overall design for a child-friendly experience
-   - Implement responsive design for various device sizes
-
-4. Implement Text-to-Speech functionality
-   - Integrate a TTS service for Lithuanian language
-   - Create audio playback components
-
-5. Expand test coverage
-   - Add unit tests for React components
-   - Increase integration test scenarios
-
-6. Implement user progress tracking
-   - Set up local storage or database for storing user progress
-   - Create UI for displaying user achievements and progress
-
-7. Optimize performance
-   - Implement lazy loading for components and assets
-   - Optimize API calls and state management
-
-8. Security enhancements
-   - Move API key handling to a secure backend service
-   - Implement proper error handling and input validation
-
-9. Localization
-   - Implement a system for managing translations
-   - Create Lithuanian language version of the UI
-
-10. Deployment
-    - Set up CI/CD pipeline
-    - Deploy to a production environment (e.g., Vercel, Netlify)
 
 ## Future Enhancements
 

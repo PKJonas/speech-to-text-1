@@ -4,15 +4,21 @@
 
 "Learn to Read" is an interactive game designed to help children, particularly Lithuanian speakers, improve their reading skills. The game displays words and sounds, uses speech recognition to verify the child's pronunciation, and rewards correct readings with engaging visuals and audio stories.
 
-This project uses React for the frontend, Express for the backend, and integrates with AssemblyAI for speech recognition.
+## Current Development Status
 
-## Features
+- Basic project structure set up with React, TypeScript, and Express
+- AssemblyAI integration for speech recognition implemented
+- Audio recording functionality working
+- Basic transcription display implemented
+- Development environment configured with concurrent frontend and backend servers
+
+## Upcoming Features
 
 - Word display with progressive difficulty
-- Speech recognition for Lithuanian language
-- Audio recording and playback
 - Reward system for correct pronunciations
 - Text-to-Speech for word pronunciation and stories
+- Enhanced user interface design
+- User progress tracking
 
 ## Getting Started
 
@@ -37,4 +43,15 @@ This project uses React for the frontend, Express for the backend, and integrate
 
 ## Development
 
-The `ToolApp` component and `tool.html` file are used for development and testing of the audio recording functionality. These files should not be included in the production build. The audio recording feature will be integrated into the main application for deployment.
+The project is currently in active development. The `ToolApp` component and `tool.html` file are used for development and testing of the audio recording functionality. These files will not be included in the production build.
+
+## Next Steps
+
+1. Implement the core game logic
+2. Enhance the user interface for a child-friendly experience
+3. Integrate the reward system
+4. Implement Text-to-Speech functionality
+5. Expand test coverage
+6. Set up deployment pipeline
+
+For more detailed information on the project's specifications and future plans, please refer to the `learn_to_read_spec.md` file in the `md` directory.

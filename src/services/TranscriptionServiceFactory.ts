@@ -1,4 +1,6 @@
-import { AssemblyAIService } from './TranscriptionService';
+import { AssemblyAIService } from './TranscriptionService.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export type ServiceType = 'AssemblyAI' | 'OtherService';
 
