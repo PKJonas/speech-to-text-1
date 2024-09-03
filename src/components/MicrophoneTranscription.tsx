@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 interface Props {
   onTranscriptionComplete: (text: string) => void;
@@ -7,6 +7,10 @@ interface Props {
 const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [canPlayback, setCanPlayback] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const startRecording = async () => {
     try {
@@ -24,6 +28,9 @@ const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) =
       recorder.onstop = async () => {
         console.log('Recording stopped');
         const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const url = URL.createObjectURL(audioBlob);
+        setAudioUrl(url);
+        setCanPlayback(true);
         await sendAudioToServer(audioBlob);
       };
 
@@ -79,13 +86,32 @@ const MicrophoneTranscription: React.FC<Props> = ({ onTranscriptionComplete }) =
     }
   };
 
+  const handlePlayback = () => {
+    if (audioRef.current && audioUrl) {
+      if (isPlaying) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
-    <div>
+    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <button onClick={() => {
         console.log('Button clicked');
         isRecording ? stopRecording() : startRecording();
       }}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}
+      </button>
+      <audio ref={audioRef} src={audioUrl || undefined} onEnded={() => setIsPlaying(false)} />
+      <button
+        onClick={handlePlayback}
+        disabled={!canPlayback}
+      >
+        {isPlaying ? 'Stop Playback' : 'Play Recording'}
       </button>
     </div>
   );
