@@ -1,6 +1,7 @@
 import { AssemblyAI } from 'assemblyai';
 import { Buffer } from 'buffer';
 import * as musicMetadata from 'music-metadata';
+import OpenAI from 'openai';
 
 export interface TranscriptionService {
   transcribe(audioFile: Buffer | null, languageCode: string): Promise<string>;
@@ -65,6 +66,24 @@ export class AssemblyAIService implements TranscriptionService {
       console.error('Error parsing audio metadata:', error);
       return 0;
     }
+  }
+}
+
+export class OpenAIService implements TranscriptionService {
+  private client: OpenAI;
+
+  constructor(apiKey: string) {
+    this.client = new OpenAI({ apiKey });
+  }
+
+  async transcribe(audioBuffer: Buffer | null, languageCode: string): Promise<string> {
+    if (!audioBuffer) {
+      throw new Error('No audio file provided');
+    }
+
+    // This is a stub implementation. We'll replace this with actual API call later.
+    console.log('OpenAI transcribe called with language:', languageCode);
+    return 'OpenAI transcription stub';
   }
 }
 
