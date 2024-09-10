@@ -7,9 +7,9 @@
     "dev:frontend": "vite",
     "dev:backend": "npm run build && node server/server.js",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
-    "test": "npm run build && jest",
-    "test:unit": "npm run build && jest tests/unit",
-    "test:integration": "npm run build && jest tests/transcription.test.js",
+    "test": "npm run build && jest --detectOpenHandles",
+    "test:unit": "npm run build && jest --detectOpenHandles tests/unit",
+    "test:integration": "npm run build && jest --detectOpenHandles tests/transcription.test.js",
     "build": "tsc"
   },
   "keywords": [],

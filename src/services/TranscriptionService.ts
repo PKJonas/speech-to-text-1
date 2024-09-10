@@ -81,9 +81,19 @@ export class OpenAIService implements TranscriptionService {
       throw new Error('No audio file provided');
     }
 
-    // This is a stub implementation. We'll replace this with actual API call later.
-    console.log('OpenAI transcribe called with language:', languageCode);
-    return 'OpenAI transcription stub';
+    try {
+      const file = new File([audioBuffer], 'audio.webm', { type: 'audio/webm' });
+      const response = await this.client.audio.transcriptions.create({
+        file: file,
+        model: 'whisper-1',
+        language: languageCode,
+      });
+
+      return response.text;
+    } catch (error) {
+      console.error('OpenAI transcription error:', error);
+      throw error;
+    }
   }
 }
 

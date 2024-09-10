@@ -27,13 +27,8 @@ describe('Transcription Service Integration Tests', () => {
 
           const transcribedText = await service.transcribe(audioBuffer, languageCode);
 
-          if (serviceType === 'OpenAI') {
-            // For now, we're just checking if the stub is called
-            expect(transcribedText).toBe('OpenAI transcription stub');
-          } else {
-            expect(transcribedText.toLowerCase()).toContain(expectedText.toLowerCase());
-          }
-        }, 30000);
+          expect(transcribedText.toLowerCase()).toContain(expectedText.toLowerCase());
+        }, 60000);
       });
     });
   });
